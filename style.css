@@ -1,0 +1,375 @@
+:root{
+  --bg:#f4f4f4; --fg:#222; --panel:#fff; --border:#ccc; --accent:#5AA4DE;
+  --header-h:56px; --fade-sec:1s;
+  /* Ver.6.0 要件4.2：配役パネルの幅は画面横幅に応じて可変にしつつ最小値を確保する */
+  --cast-w-closed: max(4vw, 60px);
+  --cast-w-open: max(20vw, 300px);
+}
+body.dark-mode{
+  --bg:#141414; --fg:#e8e8e8; --panel:#1e1e1e; --border:#3a3a3a; --accent:#3a6d90;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:"Hiragino Sans","Yu Gothic",sans-serif;background:var(--bg);color:var(--fg);transition:background .2s,color .2s;}
+.hidden{display:none !important;}
+
+/* ---------- モーダル ---------- */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.modal-box{position:relative;background:var(--panel);color:var(--fg);padding:24px;border-radius:12px;max-width:520px;width:92%;max-height:90vh;overflow:auto;}
+/* Ver.7.0：モーダル右上の常設✖️閉じるボタン（話者選択モーダル／チュートリアル共通） */
+.modal-close-x{position:absolute;top:8px;right:8px;background:none;border:none;font-size:18px;line-height:1;cursor:pointer;color:inherit;padding:4px;}
+.modal-close-x:hover{opacity:.7;}
+
+/* ---------- Ver.7.0 要件4.1：話者選択モーダル ---------- */
+.voice-select-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.voice-select-grid button{padding:10px 18px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--fg);cursor:pointer;font-size:14px;}
+.voice-select-grid button.selected{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:bold;}
+
+/* ---------- Ver.7.0 要件6：チュートリアルのハイライト表示＆ダイアログ動的配置 ---------- */
+.tutorial-highlight{
+  position:fixed;
+  border:3px solid #ffeb3b;
+  border-radius:8px;
+  box-shadow:0 0 10px 2px rgba(255,235,59,.75);   /* Ver.8.0：背景の暗転は廃止し、枠線のみで強調する */
+  z-index:1101;
+  pointer-events:none;
+  transition:left .2s,top .2s,width .2s,height .2s;
+}
+/* Ver.8.0：チュートリアルのオーバーレイは透明かつクリック透過（ハイライトされた要素や画面を通常どおり操作できる）。
+   説明ダイアログのみクリックを受け付け、他のモーダルが開いても最前面に維持する */
+#tutorialModal.modal-overlay{background:transparent;pointer-events:none;z-index:1100;}
+#tutorialModal .modal-box{position:fixed;left:50%;margin:0;z-index:1102;max-width:420px;pointer-events:auto;box-shadow:0 6px 24px rgba(0,0,0,.35);}
+#tutorialModal .modal-box.tutorial-pos-center{top:50%;transform:translate(-50%,-50%);}
+#tutorialModal .modal-box.tutorial-pos-top{top:16px;transform:translateX(-50%);}
+#tutorialModal .modal-box.tutorial-pos-bottom{bottom:16px;top:auto;transform:translateX(-50%);}
+.modal-section{margin-bottom:18px;}
+.modal-question{font-weight:bold;margin-bottom:8px;}
+.choice-row{display:flex;gap:16px;flex-wrap:wrap;}
+.choice-btn{flex:1;min-width:100px;border:2px solid var(--border);background:var(--bg);border-radius:8px;cursor:pointer;padding:6px;display:flex;flex-direction:column;align-items:center;}
+.choice-btn.selected{border-color:var(--accent);outline:3px solid var(--accent);}
+.choice-btn.simple{padding:16px;font-size:16px;}
+.choice-img,.choice-video{width:100%;height:110px;object-fit:cover;border-radius:6px;background:#999;}
+.choice-label{width:100%;text-align:center;font-size:22px;margin-top:4px;}
+.primary-btn{width:100%;padding:12px;font-size:16px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;}
+.primary-btn:disabled{opacity:.4;cursor:not-allowed;}
+.admin-box{max-width:640px;}
+.admin-box h4{margin:14px 0 6px;font-size:13px;border-top:1px solid var(--border);padding-top:10px;}
+.admin-asset-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border);padding:8px 0;font-size:13px;}
+.admin-dynamic-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;padding:8px 0;}
+.admin-dynamic-row select{padding:4px;}
+#adminAssetPathPreview{width:100%;}
+.admin-users-add-row{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;}
+.admin-users-add-row input{flex:1;min-width:100px;padding:6px;border:1px solid var(--border);background:var(--bg);color:var(--fg);}
+#adminUsersTable td{font-size:12px;}
+.admin-user-self-row{background:rgba(90,164,222,.15);}
+.admin-user-id-input,.admin-user-pass-input{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--fg);padding:3px;font-size:12px;}
+
+/* ---------- ヘッダー ---------- */
+header{height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px;position:sticky;top:0;z-index:100;}
+header h1{font-size:16px;margin:0;}
+.header-left,.header-center,.header-right{display:flex;align-items:center;gap:6px;}
+.header-right{margin-left:auto;}
+.inline-group{display:inline-flex;gap:6px;align-items:center;}
+.version-memo-display{font-size:11px;opacity:.7;}
+.stopwatch{font-variant-numeric:tabular-nums;font-size:16px;min-width:70px;}
+header button, .file-btn{font-size:12px;padding:5px 8px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:6px;cursor:pointer;}
+.file-btn{display:inline-block;}
+
+/* Ver.7.0 要件4.2：ボタン配色（チュートリアル／zip出力）とホバー時の透過フィードバック */
+#tutorialBtn{background:#95c68a;color:#222;border-color:#95c68a;}
+#tutorialBtn:hover{opacity:.8;}
+#exportJsonBtn{background:#e3ed79;color:#222;border-color:#e3ed79;}
+#exportJsonBtn:hover{opacity:.8;}
+
+.login-area{position:relative;}
+.settings-menu{position:absolute;right:0;top:110%;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:4px;min-width:150px;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.2);}
+.settings-menu button{width:100%;text-align:left;}
+
+#versionMemoBar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 12px;background:var(--panel);border-bottom:1px solid var(--border);font-size:12px;margin-left:var(--cast-w-closed);transition:margin-left .2s;position:relative;z-index:10;width:calc(100% - var(--cast-w-closed));}
+body.cast-open #versionMemoBar{margin-left:var(--cast-w-open);width:calc(100% - var(--cast-w-open));}
+#versionMemoBar input{flex:1;min-width:160px;padding:4px;border:1px solid var(--border);background:var(--bg);color:var(--fg);}
+#versionMemoList{list-style:none;margin:8px 0 0;padding:0;display:flex;gap:8px;flex-wrap:wrap;width:100%;}
+#versionMemoList li{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 6px;display:flex;align-items:center;gap:6px;}
+#versionMemoList .memo-title-btn{background:none;border:none;color:inherit;font-size:12px;cursor:pointer;text-decoration:underline;padding:0;}
+#versionMemoList .memo-title-btn:hover{color:var(--accent);}
+
+/* ---------- レイアウト ---------- */
+#mainLayout{display:flex;flex-direction:column;height:calc(100vh - var(--header-h) - 40px);margin-left:var(--cast-w-closed);transition:margin-left .2s;}
+@media (min-width:900px) and (orientation:landscape){
+  #mainLayout{flex-direction:row;}
+  /* 要件③：横画面時のみ、配役パネルが開いた分だけ台本/動画/Cue画面とステージ画面を縮小（右へ圧縮）表示し、重なりを解消する。
+     縦画面では画面が細くなりすぎるため、この圧縮は行わない（配役パネルは重なったまま表示される）。 */
+  body.cast-open #mainLayout{margin-left:var(--cast-w-open);}
+}
+.content-area{flex:1;overflow:auto;padding:10px;border:1px solid var(--border);margin:4px;border-radius:8px;background:var(--panel);position:relative;}
+
+/* ---------- 配役パネル（Ver.6.0 要件4.2：開20%[最小300px]／閉4%[最小60px]） ---------- */
+.cast-panel{position:fixed;left:0;top:var(--header-h);bottom:0;background:var(--panel);border-right:1px solid var(--border);z-index:50;transition:width .2s;overflow:hidden;width:var(--cast-w-closed);}
+.cast-panel.open{width:var(--cast-w-open);overflow:auto;}
+.cast-panel-header{display:flex;justify-content:space-between;align-items:center;padding:8px;cursor:pointer;font-weight:bold;border-bottom:1px solid var(--border);}
+/* Ver.7.0 要件4.1：閉じた状態は、バー内の絵文字・テキストを縦書きで表示する */
+.cast-panel.closed .cast-panel-header{
+  flex-direction:row;
+  justify-content:flex-start;
+  align-items:center;
+  height:100%;
+  gap:10px;
+  padding:12px 4px;
+  writing-mode:vertical-rl;
+  text-orientation:upright;
+  border-bottom:none;
+}
+.cast-panel.closed .cast-panel-header span{writing-mode:vertical-rl;text-orientation:upright;}
+.cast-panel.closed .cast-panel-body{display:none;}
+.cast-panel-body{padding:8px;}
+#castList{display:flex;flex-direction:column;gap:6px;}
+.cast-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap;border:1px solid var(--border);border-radius:6px;padding:4px;font-size:12px;}
+/* 閉じた状態は表示自体を隠すのみで、名前を強制的に3文字へ切り詰めることはしない */
+.cast-panel.closed .cast-row{display:none;}
+.cast-row input[type=text]{width:70px;font-size:12px;padding:2px;}
+/* 要件⑥：役者名入力欄は登場人物名・保存ボタンはそのままに、幅を約70%に縮小 */
+.cast-row input[type=text].actor-input{width:49px;}
+/* 要件④：マイクがかぶった場合も警告ではなく、マイク種別ごとの固定色のみで判別する */
+.mic-btn{cursor:pointer;border:1px solid var(--border);border-radius:4px;padding:2px 4px;font-weight:bold;}
+.mic-btn.mic-shared{outline:2px solid #000;outline-offset:1px;}
+.voice-btn{cursor:pointer;border:1px solid var(--border);border-radius:4px;padding:2px 4px;background:var(--bg);color:var(--fg);font-size:11px;}
+.color-swatch-btn{width:18px;height:18px;border-radius:50%;border:1px solid #000;cursor:pointer;}
+.del-btn{color:#c00;cursor:pointer;background:none;border:none;font-size:14px;}
+.apply-btn{color:#fff;background:var(--accent);border:none;border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer;}
+/* Ver.7.0 要件4.1：要素間隔を保持しつつ、画面幅に収まらない場合は自動折り返しする */
+.cast-add-row{display:flex;gap:10px;margin-top:8px;align-items:stretch;flex-wrap:wrap;}
+/* Ver.7.0 要件4.1：登場人物入力欄／役者入力欄 幅100px〜8% */
+.cast-add-row input{flex:0 1 auto;font-size:12px;padding:4px;width:clamp(100px, 8%, 9999px);min-width:100px;}
+.cast-add-row .vertical-btn{
+  flex:0 0 auto;
+  /* Ver.7.0 要件4.1：「音声」「追加」ボタン 幅25px〜2% */
+  width:clamp(25px, 2%, 9999px);
+  min-width:25px;
+  writing-mode:vertical-rl;
+  text-orientation:upright;
+  letter-spacing:1px;
+  padding:4px 2px;
+  font-size:11px;
+  border:1px solid var(--border);
+  background:var(--accent);
+  color:#fff;
+  border-radius:4px;
+  cursor:pointer;
+}
+#newCharVoiceBtn.vertical-btn{background:var(--bg);color:var(--fg);}
+
+/* ---------- タブ ---------- */
+.tab-row{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;}
+.tab-btn{flex:1;min-width:70px;padding:6px;border:1px solid var(--border);background:var(--bg);color:var(--fg);cursor:pointer;border-radius:6px 6px 0 0;}
+.tab-btn.active{background:var(--accent);color:#fff;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+/* 要件⑥：Cue記録ボタンは黄色地に濃色文字で目立たせる */
+.cue-record-btn{background:#FFD166;color:#222;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;margin-bottom:6px;font-weight:bold;}
+
+/* ---------- 台本ツールバー（追従） ---------- */
+.sticky-toolbar{position:sticky;top:0;z-index:20;background:var(--panel);padding:6px 0 8px 0;border-bottom:1px solid var(--border);}
+.toolbar-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:4px;}
+.toolbar-row button, .toolbar-row .file-btn{font-size:12px;padding:5px 8px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:6px;cursor:pointer;}
+.toolbar-row button.cue-record-btn{background:#FFD166;color:#222;border:none;font-weight:bold;}
+.gdoc-row input[type=text]{flex:1;min-width:160px;padding:4px;border:1px solid var(--border);background:var(--bg);color:var(--fg);}
+#scriptAudioSeek{flex:1;min-width:120px;}
+#scriptAudioTime{font-size:11px;white-space:nowrap;}
+
+.script-editor{min-height:300px;border:1px solid var(--border);padding:10px;background:var(--bg);overflow:auto;line-height:1.8;color:var(--fg);}
+body.dark-mode .script-editor{color:#f5f5f5;}
+body.dark-mode .script-editor *{color:inherit;}
+.script-editor .tokaki{color:#888;font-style:italic;}
+.script-editor .speaker-highlight{font-weight:bold;}
+.speaker-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:3px;}
+.hint{font-size:11px;opacity:.6;}
+.csv-method-row{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:8px;}
+.csv-method-row select{padding:4px;}
+.csv-btn-row{display:flex;gap:8px;align-items:center;}
+.cue-mirror-title{font-size:14px;margin:14px 0 4px 0;}
+
+#rehearsalVideo{width:100%;max-height:260px;background:#000;}
+.cue-capture-row{display:flex;align-items:center;gap:10px;margin:8px 0;}
+.cue-table{width:100%;border-collapse:collapse;font-size:11px;}
+.cue-table th,.cue-table td{border:1px solid var(--border);padding:4px;text-align:center;}
+.cue-table tr.cue-row{cursor:pointer;}
+.cue-table tr.cue-row:hover{background:var(--accent);color:#fff;}
+
+/* Ver.7.0 要件3.1／3.2：Cue一覧（順番/秒数/音源/セリフ/舞台/背景/Effect/ストロボ/フェード/反映/✖️）の
+   列幅を1200px幅換算の比率で固定し、狭い画面では表全体を横スクロールさせる */
+.cue-table-wrap{width:100%;overflow-x:auto;}
+.cue-main-table{table-layout:fixed;min-width:640px;}
+.cue-main-table th:nth-child(1),.cue-main-table td:nth-child(1){width:4.35%;}   /* 順番/Fader */
+.cue-main-table th:nth-child(2),.cue-main-table td:nth-child(2){width:4.35%;}   /* 秒数 */
+.cue-main-table th:nth-child(3),.cue-main-table td:nth-child(3){width:4.35%;}   /* 音源 */
+.cue-main-table th:nth-child(4),.cue-main-table td:nth-child(4){width:14.43%;}  /* セリフ */
+.cue-main-table th:nth-child(5),.cue-main-table td:nth-child(5){width:4.35%;}   /* 舞台 */
+.cue-main-table th:nth-child(6),.cue-main-table td:nth-child(6){width:5.70%;}   /* 背景 */
+.cue-main-table th:nth-child(7),.cue-main-table td:nth-child(7){width:4.35%;}   /* Effect */
+.cue-main-table th:nth-child(8),.cue-main-table td:nth-child(8){width:5.70%;}   /* ストロボ */
+.cue-main-table th:nth-child(9),.cue-main-table td:nth-child(9){width:5.70%;}   /* フェード */
+.cue-main-table th:nth-child(10),.cue-main-table td:nth-child(10){width:6.70%;} /* 反映 */
+.cue-main-table th:nth-child(11),.cue-main-table td:nth-child(11){width:4.35%;} /* ✖️ */
+/* セリフ列は1行固定表示＋はみ出し部分を省略記号にする（全文はtitle属性のツールチップで表示） */
+.cue-main-table td.cue-line-cell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;}
+
+/* ---------- ステージ ---------- */
+.stage-controls{display:flex;gap:6px;margin-bottom:8px;}
+.stage-btn{flex:1;padding:8px;border:1px solid var(--border);background:var(--bg);color:var(--fg);cursor:pointer;border-radius:6px;}
+.stage-preview{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;border-radius:8px;}
+.stage-bg-img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:opacity var(--fade-sec) ease;}
+.stage-color-filter{position:absolute;inset:0;mix-blend-mode:multiply;opacity:0;transition:opacity var(--fade-sec) ease,background-color var(--fade-sec) ease;}
+#stageItemsLayer{position:absolute;inset:0;}
+.stage-item{position:absolute;width:60px;height:60px;cursor:pointer;user-select:none;touch-action:none;}
+.stage-item img{width:100%;height:100%;object-fit:contain;pointer-events:none;}
+.stage-item.selected{outline:3px solid #e63946;outline-offset:2px;box-shadow:0 0 10px rgba(230,57,70,.85);border-radius:4px;}
+.stage-item-remove-btn{position:absolute;top:-10px;right:-10px;width:20px;height:20px;line-height:18px;padding:0;border-radius:50%;border:1px solid #fff;background:#e63946;color:#fff;font-size:11px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.4);z-index:5;}
+.stage-preview.item-selecting{cursor:crosshair;}
+.file-btn.active-highlight{border-color:#e63946;box-shadow:0 0 0 2px #e63946;background:#ffe5e5;font-weight:bold;}
+
+.stage-color-section{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0;justify-content:center;}
+.color-toggle-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;flex:1;}
+.color-toggle-btn{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);cursor:pointer;}
+.color-toggle-btn.active{border-color:#000;box-shadow:0 0 0 2px #fff, 0 0 0 4px currentColor;}
+
+.side-btn{font-size:11px;padding:6px 8px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:6px;cursor:pointer;white-space:nowrap;}
+.side-btn.active-state{border-color:#e63946;box-shadow:0 0 0 2px #e63946;font-weight:bold;background:#ffe5e5;}
+.side-btn-group{display:flex;gap:8px;align-items:center;}
+.strobe-btn{margin-right:auto;}
+
+.custom-effect-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end;font-size:12px;margin-bottom:8px;padding:6px;border:1px dashed var(--border);border-radius:6px;}
+.custom-effect-row input{width:60px;padding:3px;}
+.custom-effect-row button{padding:4px 10px;border:none;border-radius:6px;background:var(--accent);color:#fff;cursor:pointer;}
+
+.stage-item-add{display:flex;gap:6px;flex-wrap:wrap;}
+
+/* ---------- 音源トラック（要件④：複数音源） ---------- */
+.audio-tracks-list{display:flex;flex-direction:column;gap:4px;margin-bottom:4px;}
+.audio-track-row{display:flex;align-items:center;gap:6px;font-size:11px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:4px 6px;flex-wrap:wrap;}
+.audio-track-row .audio-track-name{font-weight:bold;min-width:22px;text-align:center;}
+.audio-track-row button{font-size:11px;padding:3px 6px;border:1px solid var(--border);background:var(--panel);color:var(--fg);border-radius:4px;cursor:pointer;}
+.audio-track-row input[type=text].audio-track-name-input{width:70px;font-size:11px;padding:2px;}
+.audio-track-row input[type=range]{flex:1;min-width:100px;}
+.audio-track-row .audio-track-time{white-space:nowrap;}
+.audio-track-row.audio-track-current{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+
+/* ---------- ゲームモード（本番モード）：レイアウト圧縮とCue一覧の列制御（要件⑪） ---------- */
+.game-mode-flex{display:block;}
+body.locked .game-mode-flex{display:flex;gap:8px;align-items:flex-start;}
+body.locked .game-mode-flex .game-primary{flex:0 0 70%;max-width:70%;min-width:0;}
+body.locked .game-mode-flex .game-cue-panel{flex:0 0 29%;max-width:29%;min-width:0;overflow-x:hidden;}
+.game-cue-panel .cue-table{table-layout:fixed;width:100%;}
+body.locked .game-cue-panel .cue-table th,
+body.locked .game-cue-panel .cue-table td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 2px;font-size:10px;}
+/* Fader,秒数,音源,セリフ の4列のみ表示し、それ以外（舞台以降・反映・削除）は本番モードで非表示にする */
+body.locked .cue-table th:nth-child(n+5),
+body.locked .cue-table td:nth-child(n+5){display:none;}
+body.locked .cue-mirror-title{margin-top:0;}
+
+/* ---------- ゲームモード用の大型入力ボタン（要件②→追加要望①：縦画面のみ表示） ---------- */
+#gameHitBtn{
+  display:none;
+  margin-left:auto;
+  width:30vw;height:15vh;
+  font-size:18px;font-weight:bold;
+  background:var(--accent);color:#fff;border:none;border-radius:12px;
+  cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.3);
+  touch-action:none;user-select:none;
+}
+@media (orientation:portrait){
+  body.locked #gameHitBtn.game-active{display:block;}
+}
+#gameHitBtn.pressed{filter:brightness(1.25);}
+.stage-item-add{position:relative;}
+
+/* ---------- 本番モードで反映済みのCue（追加要望⑤） ---------- */
+.cue-table tr.cue-row.cue-row-reflected{background:#bdbdbd;color:#333;}
+.cue-table tr.cue-row.cue-row-reflected:hover{background:#a9a9a9;color:#222;}
+body.dark-mode .cue-table tr.cue-row.cue-row-reflected{background:#4a4a4a;color:#ddd;}
+
+/* ---------- ストロボ色クロスフェード用レイヤー（要件⑩） ---------- */
+.stage-color-filter2{position:absolute;inset:0;mix-blend-mode:multiply;opacity:0;pointer-events:none;}
+
+/* ---------- 本番ロックモード ---------- */
+body.locked .editable-only, body.locked input, body.locked .cast-add-row, body.locked .stage-item-add > .file-btn, body.locked #stageVideoDirectBtn{
+  display:none !important;
+}
+body.locked .script-editor{border:none;}
+
+@keyframes strobeFlash{0%,100%{opacity:.7}50%{opacity:0}}
+@keyframes strobeSpin{from{filter:hue-rotate(0deg);}to{filter:hue-rotate(360deg);}}
+.stage-preview.strobe-kurukuru .stage-bg-img,.stage-preview.strobe-kurukuru .stage-color-filter,.stage-preview.strobe-kurukuru .stage-color-filter2{animation:strobeSpin 1.2s linear infinite;}
+
+/* ---------- 印刷 ---------- */
+@media print{
+  header,#versionMemoBar,.cast-panel,.tab-row,.sticky-toolbar,#stageArea,.modal-overlay{display:none !important;}
+  #mainLayout{display:block;height:auto;margin-left:0;}
+  .content-area{border:none;box-shadow:none;}
+  #printFooter{display:block;}
+  body{background:#fff;color:#000;}
+  @page{margin:15mm;}
+}
+#printFooter{display:none;}
+
+/* ---------- Ver.6.0 要件3.1：音声調整モーダル ---------- */
+.voice-settings-row{display:flex;flex-direction:column;gap:4px;margin-bottom:14px;font-size:13px;font-weight:bold;}
+.voice-settings-row input[type=text]{padding:8px;font-size:13px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:6px;font-weight:normal;}
+.voice-settings-row input[type=range]{width:100%;}
+.voice-settings-value{align-self:flex-end;font-size:12px;font-weight:normal;opacity:.7;}
+
+/* ---------- Ver.6.0 要件8：チュートリアルモーダル ---------- */
+.tutorial-step-body{line-height:1.7;font-size:14px;min-height:80px;}
+.tutorial-progress{text-align:center;letter-spacing:4px;font-size:10px;margin:8px 0 14px;opacity:.6;}
+.tutorial-skip-row{display:flex;align-items:center;gap:6px;font-size:12px;margin-bottom:10px;}
+.tutorial-btn-row{display:flex;gap:8px;}
+.tutorial-btn-row button{flex:1;padding:10px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:8px;cursor:pointer;}
+.tutorial-btn-row .primary-btn{border:none;}
+/* Ver.8.0：ログインボタンの特別扱いは廃止（チュートリアル中もページ全体を操作できるため） */
+
+/* ---------- Ver.6.0 要件4.4：配置アイテムのドラッグ＆ドロップ ---------- */
+.stage-item{cursor:grab;}
+.stage-item.dragging{cursor:grabbing;opacity:.6;}
+.stage-preview.dragover-active{outline:3px dashed var(--accent);outline-offset:-3px;}
+
+
+/* ---------- Ver.8.0：設定メニュー（並び順変更・ログアウト色） ---------- */
+#logoutBtn{background:#E77272;color:#fff;border-color:#E77272;}
+#logoutBtn:hover{opacity:.85;}
+
+/* ---------- Ver.8.0：「その他」画面（タブ切替） ---------- */
+.other-box{max-width:960px;width:94%;}
+.other-tab-row,.dm-tab-row{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px;}
+.other-tab-btn,.dm-tab-btn{padding:6px 12px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:8px;cursor:pointer;font-size:13px;}
+.other-tab-btn.active,.dm-tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:bold;}
+.other-pane .primary-btn{margin-top:6px;}
+.cue-table-wrap{overflow-x:auto;}
+.input-mode-table td{text-align:center;}
+
+/* ---------- Ver.8.0：データ管理（5タブ） ---------- */
+.dm-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;}
+.dm-table input{width:100%;padding:4px 6px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:4px;font-size:13px;}
+.dm-table td:first-child{text-align:center;}
+.sub-head,.effect-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px;}
+.sub-head label,.effect-head label{display:flex;align-items:center;gap:6px;font-weight:bold;font-size:13px;}
+.sub-head input[type=number],.effect-head input[type=number]{width:80px;padding:4px 6px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:4px;}
+.sub-title-label input,.effect-name-label input{width:220px;max-width:50vw;padding:4px 6px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:4px;}
+.effect-head button:disabled{opacity:.5;cursor:not-allowed;}
+
+/* Effectタブ：横幅比率（左余白10%／step5%／秒数5%／フェーダー番号60%／削除10%／右余白10%）。
+   step・秒数は12px、削除は24pxを下回らない。幅が不足する場合は左右の余白を均等に縮める */
+.effect-grid{display:grid;grid-template-columns:minmax(0,8%) max(5%,12px) max(5%,12px) 40% 24% max(10%,24px) minmax(0,8%);align-items:center;width:100%;}
+.effect-combo-text{font-size:12px;opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.effect-grid-head{font-size:11px;font-weight:bold;opacity:.7;margin-bottom:4px;}
+.effect-grid-head span{overflow:hidden;white-space:nowrap;}
+.effect-row{margin-bottom:4px;}
+.effect-row input{min-width:0;width:100%;padding:2px 4px;border:1px solid var(--border);background:var(--bg);color:var(--fg);border-radius:4px;font-size:13px;}
+.effect-step-no{text-align:center;font-size:12px;min-width:0;}
+.effect-del-wrap{display:flex;justify-content:center;min-width:0;}
+.effect-del-btn{padding:2px 4px;font-size:11px;min-width:0;}
+.effect-row-new input{border-style:dashed;}
+
+/* ---------- Ver.8.0：Sub置き換え確認 ---------- */
+.sub-confirm-box{max-width:560px;}
+.sub-confirm-list{max-height:50vh;overflow:auto;border:1px solid var(--border);border-radius:6px;padding:6px;margin:8px 0 12px;font-size:13px;}
+.sub-confirm-row{padding:2px 4px;}
+.sub-confirm-row.diff{background:rgba(255,209,102,.35);font-weight:bold;}
+#subConfirmModal{z-index:1050;}
