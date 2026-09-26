@@ -2526,7 +2526,7 @@ function recordCue(sec, source){
     // （一覧の表示項目には出さない隠しデータ）
     stageItemsSnapshot: JSON.parse(JSON.stringify(state.stageItems||[]))
   };
-  saveCueToSub(cue);   // Ver.8.0：Cue一覧の内容を「データ管理＞Sub」へ自動保存
+  // 追加実装：Cue記録ではSubへの自動保存を行わない（Sub反映は「データを保存」ボタンへ移動）
   state.cues.push(cue);
   // Ver.8.1 §7-2：数値の行は昇順、'-'（未確定）の行はその後ろに挿入順のまま並べる（NaN比較を避ける）
   state.cues.sort((a,b)=>{
@@ -3828,7 +3828,8 @@ $('#ghWriteBtn').addEventListener('click', async ()=>{
 });
 
 /* ============================================================
-   comos出力 / JASCII出力
+   旧comos出力 / JASCII出力（現在はUIから外され、調光卓出力(.dat)に置き換え済み。
+   buildOutputCues等は内部で使用しないため未使用だが、ロジックは削除せず保持する）
    （Cue一覧の各Cueを、Subデータ＋Effectタブのデータから照明卓用テキストに変換する）
    入力マトリクス：Cue, Time, Up, Down, Ch1〜Ch60（0〜100）→ 0のチャンネルは出力しない
    ============================================================ */
@@ -3913,15 +3914,162 @@ function downloadTextFile(fileName, text){
   a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
 }
-$('#exportComosBtn').addEventListener('click', ()=>{
+/* ============================================================
+   データを保存（旧comos出力）
+   3-1: Cue一覧の全データをSUBへ一括反映
+   3-2: 「照明職人用」の全データをEffectの未設定No.へ一括反映
+   ============================================================ */
+// 3-1：Cue一覧の各Cueを、Subへ反映する（既にSubへ紐付いているCueは上書き更新、未紐付けは新規保存）
+function bulkSyncCuesToSub(){
+  state.cues.forEach(cue=>{
+    if(cue.subNo!=null && cue.subRow!=null && linkedSubRow(cue)){
+      updateSubForCue(cue);
+    }else{
+      saveCueToSub(cue);
+    }
+  });
+  refreshSubTabIfVisible();
+}
+// 3-2：「照明職人用」(state.customEffects)の全データを、Effect(state.effectData)へ反映する。
+// 各エントリのNo.は照明職人用「保存」時点で既にnextBlankEffectNoにより確定済みのため、
+// ここではNo.の再割当は行わず、そのNo.のEffectへ内容を書き戻す（未設定No.のみ・既存データは上書きしない）。
+function bulkSyncCfxToEffect(){
+  const byNo = {};
+  state.customEffects.forEach(e=>{ (byNo[e.no] = byNo[e.no]||[]).push(e); });
+  Object.keys(byNo).forEach(noKey=>{
+    const no = parseInt(noKey,10);
+    if(isNaN(no)) return;
+    const existing = state.effectData[String(no)];
+    const alreadyHasData = !!(existing && ((existing.name||'').trim() || (existing.steps||[]).some(s=>String(s.faders||'').trim())));
+    // 既にデータが入っているNo.は上書きしない（照明職人用自身が保存したNo.への再反映は許容する）
+    const ownedByThisGroup = byNo[noKey].every(e=>e.no===no);
+    if(alreadyHasData && !ownedByThisGroup) return;
+    byNo[noKey].sort((a,b)=>a.step-b.step).forEach(e=>{
+      const faders = [];
+      if(e.colorName && e.colorName!=='-'){
+        const bgT = findTemplateByName(e.colorName);
+        if(bgT && (bgT.faders||'').trim()) faders.push(bgT.faders.trim());
+      }
+      if(e.strobeLabel==='◯'){
+        const stT = findTemplateByName('ストロボ');
+        if(stT && (stT.faders||'').trim()) faders.push(stT.faders.trim());
+      }
+      writeEffectStep(no, e.step, {sec:e.sec, faders:faders.join('、'), bg:e.colorName, strobe:e.strobeLabel});
+    });
+  });
+  refreshEffectTabIfVisible();
+}
+$('#saveDataBtn').addEventListener('click', ()=>{
   $('#settingsMenu').classList.add('hidden');
-  if(!state.cues.length){ alert('Cue一覧にCueがありません。'); return; }
-  downloadTextFile('stage_cue_comos.cms', buildComosText(buildOutputCues()));
+  bulkSyncCuesToSub();
+  bulkSyncCfxToEffect();
+  saveState();
+  alert('Cue一覧の内容をSUBへ、照明職人用の内容をEffectへ反映しました。');
 });
-$('#exportJasciiBtn').addEventListener('click', ()=>{
+
+/* ============================================================
+   調光卓出力（旧JASCII出力）
+   SUB/Effectデータを、照明調光卓の独自テキスト形式（拡張子.dat）に変換して
+   ブラウザから直接ダウンロードする。ヘッダーは添付サンプル（effect.dat/sub.dat）を踏襲する。
+   ============================================================ */
+// 添付サンプルのヘッダー（バージョン・Place情報等、Shift_JIS/cp932バイト列）をそのまま踏襲するためのBase64データ
+const CONSOLE_DAT_HEADER_SUB_B64 = 'IwojCVN1YiBmaWxlCiMKIyAgVmVyc2lvbiA6IEYxNTMgVjMuMzFBCiMgIFBsYWNlICAgOiC02MC+wc+ywcPms9i5u6GmueLF+bPYubsKIwo=';
+const CONSOLE_DAT_HEADER_EFFECT_B64 = 'IwojCUVmZmVjdCBmaWxlCiMKIyAgVmVyc2lvbiA6IEYxNTMgVjMuMzFBCiMgIFBsYWNlICAgOiC02MC+wc+ywcPms9i5u6GmueLF+bPYubsKIwpkZWZhdWx0OiAxNjYK';
+function base64ToBytes(b64){
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+// 0〜100(%)のレベルを、調光卓の0〜255階調へ変換する
+function levelPctTo255(pct){ return Math.max(0, Math.min(255, Math.round(pct*255/100))); }
+// SUBの1フェーダー分（{name,faders,effect}）を、fader行のModeParamsとチャンネル出力リストへ変換する。
+// 「独自Effect」（エフェクトN）にリンクしている場合は、実機のmode=2（Effect Noへのリンク）形式に変換し、
+// チャンネル出力行は持たない（添付サンプルのfader4:, 2, 0, 1, 0, 0 等と同じ扱い）。
+function subFaderToDat(row){
+  const effNo = parseInt(row.effect, 10);
+  if(!isNaN(effNo) && effNo>=1){
+    return {modeParams: ` , 2, 0, ${effNo}, 0, 0`, channels: null};
+  }
+  const list = levelsToSortedList(parseFaderLevels(row.faders)).map(([ch,pct])=>[ch, levelPctTo255(pct)]);
+  return {modeParams: ' , 0, 0, 0, 0, 0', channels: list.length ? list : null};
+}
+function buildSubDatText(){
+  const lines = [];
+  Object.keys(state.subPages).map(n=>parseInt(n,10)).filter(n=>!isNaN(n)).sort((a,b)=>a-b).forEach(pageNo=>{
+    const rows = state.subPages[String(pageNo)] || [];
+    const activeIdx = [];
+    rows.forEach((row,idx)=>{ if(!isSubRowEmpty(row)) activeIdx.push(idx); });
+    if(!activeIdx.length) return;
+    lines.push(`page${pageNo}: `);
+    activeIdx.forEach(idx=>{
+      const {modeParams, channels} = subFaderToDat(rows[idx]);
+      lines.push(`fader${idx+1}:${modeParams}`);
+      if(channels) lines.push('  '+channels.map(([ch,v])=>`${ch}@${v}`).join(', '));
+    });
+  });
+  return lines.join('\n') + '\n';
+}
+function buildEffectDatText(){
+  const lines = [];
+  Object.keys(state.effectData).map(n=>parseInt(n,10)).filter(n=>!isNaN(n)).sort((a,b)=>a-b).forEach(no=>{
+    const e = state.effectData[String(no)] || {steps:[]};
+    const activeSteps = [];
+    (e.steps||[]).forEach((s,idx)=>{ if(String(s.faders||'').trim()) activeSteps.push({step:idx+1, s}); });
+    if(!activeSteps.length) return;
+    lines.push(`pattern${no}: 2, 0, 0, 0, 100`);
+    activeSteps.forEach(({step,s})=>{
+      const list = levelsToSortedList(parseFaderLevels(s.faders)).map(([ch,pct])=>[ch, levelPctTo255(pct)]);
+      lines.push(`step${step}: 0, 1`);
+      if(list.length) lines.push('  '+list.map(([ch,v])=>`${ch}@${v}`).join(', '));
+    });
+  });
+  return lines.join('\n') + '\n';
+}
+// 逆変換：.dat形式のテキストを、SUB/Effectの内部データ構造へ読み込む
+// （ヘッダー行・page/pattern行・fader/step行・インデントされたチャンネル行を判定して読み込む）
+function parseConsoleDatText(text){
+  const lines = String(text||'').replace(/\r\n?/g,'\n').split('\n');
+  const pages = {}; // {pageNo: {faderNo: {modeParams, channels:[[ch,v]]}}}
+  let curPage = null, curFader = null;
+  lines.forEach(raw=>{
+    if(/^#/.test(raw) || /^default:/.test(raw) || raw==='') return;
+    let m;
+    if((m = /^(page|pattern)(\d+):\s*$/.exec(raw))){
+      curPage = m[2]; pages[curPage] = pages[curPage] || {}; curFader = null; return;
+    }
+    if((m = /^(fader|step)(\d+):(.*)$/.exec(raw))){
+      curFader = m[2];
+      if(curPage!=null) pages[curPage][curFader] = {modeParams: m[3], channels: []};
+      return;
+    }
+    if(/^\s{2}/.test(raw) && curPage!=null && curFader!=null){
+      const list = raw.trim().split(',').map(t=>t.trim()).filter(Boolean).map(tok=>{
+        const mm = /^(\d+)@(\d+)$/.exec(tok);
+        return mm ? [parseInt(mm[1],10), parseInt(mm[2],10)] : null;
+      }).filter(Boolean);
+      pages[curPage][curFader].channels = pages[curPage][curFader].channels.concat(list);
+    }
+  });
+  return pages;
+}
+function downloadConsoleDatFile(fileName, headerB64, bodyText){
+  const headerBytes = base64ToBytes(headerB64);
+  const bodyBytes = new TextEncoder().encode(bodyText);
+  const combined = new Uint8Array(headerBytes.length + bodyBytes.length);
+  combined.set(headerBytes, 0);
+  combined.set(bodyBytes, headerBytes.length);
+  const blob = new Blob([combined], {type:'application/octet-stream'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fileName;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+$('#consoleExportBtn').addEventListener('click', ()=>{
   $('#settingsMenu').classList.add('hidden');
-  if(!state.cues.length){ alert('Cue一覧にCueがありません。'); return; }
-  downloadTextFile('stage_cue_jascii.jsc', buildJasciiText(buildOutputCues()));
+  downloadConsoleDatFile('sub.dat', CONSOLE_DAT_HEADER_SUB_B64, buildSubDatText());
+  downloadConsoleDatFile('effect.dat', CONSOLE_DAT_HEADER_EFFECT_B64, buildEffectDatText());
 });
 
 /* ============================================================
