@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CSV to DAT Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 650px;
+        }
+        input[type="file"] {
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        textarea {
+            width: 100%;
+            height: 250px;
+            margin-top: 15px;
+            font-family: monospace;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>CSV → DAT 変換ツール</h2>
+    <p>CSVファイルを選択してください。</p>
+    <input type="file" id="csvFile" accept=".csv"><br>
+    <button id="convertBtn" onclick="processFile()">DAT形式に変換</button>
+    <button id="downloadBtn" onclick="downloadDat()" disabled>DATファイルをダウンロード</button>
+
+    <h3>プレビュー:</h3>
+    <textarea id="output" readonly placeholder="変換結果がここに表示されます..."></textarea>
+</div>
+
+<script>
+let convertedDatContent = "";
+
+// CSVの1行をクォーテーション考慮でパースする関数
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    result.push(current.trim());
+    return result;
+}
+
+function processFile() {
+    const fileInput = document.getElementById('csvFile');
+    if (!fileInput.files.length) {
+        alert('CSVファイルを選択してください。');
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        const text = e.target.result;
+        convertedDatContent = convertToDat(text);
+        
+        document.getElementById('output').value = convertedDatContent;
+        document.getElementById('downloadBtn').disabled = false;
+    };
+
+    reader.readAsText(file);
+}
+
+function convertToDat(csvText) {
+    const lines = csvText.split(/\r?\n/);
+    const pages = {};
+
+    lines.forEach(line => {
+        if (!line.trim()) return;
+
+        const cols = parseCSVLine(line);
+        
+        // ヘッダー行や不正な行をスキップ
+        const pageNum = cols[0].replace(/[^0-9]/g, '');
+        const faderNum = cols[1].replace(/[^0-9]/g, '');
+        if (!pageNum || !faderNum) return;
+
+        if (!pages[pageNum]) {
+            pages[pageNum] = [];
+        }
+
+        // パラメータ部分 (3列目〜末尾直前まで)
+        let params = "";
+        if (cols.length > 3) {
+            const paramCols = cols.slice(2, cols.length - 1);
+            params = ", " + paramCols.join(', ');
+        } else {
+            params = ", 0, 0, 0, 0, 0";
+        }
+
+        // チャンネル出力データ (末尾列)
+        const channels = cols[cols.length - 1] || "";
+
+        pages[pageNum].push({
+            fader: faderNum,
+            params: params,
+            channels: channels
+        });
+    });
+
+    // DATヘッダーの生成[span_0](start_span)[span_0](end_span)
+    let datResult = "#\n#\tSub file\n#\n#  Version : F153 V3.31A\n#  Place   : \n#\n";
+
+    // ページ・フェーダーデータのテキスト構築[span_1](start_span)[span_1](end_span)
+    for (const [page, faders] of Object.entries(pages)) {
+        datResult += `page${page}: \n`;
+        faders.forEach(f => {
+            datResult += `fader${f.fader}: ${f.params}\n`;
+            if (f.channels) {
+                datResult += `  ${f.channels}\n`;
+            }
+        });
+    }
+
+    return datResult;
+}
+
+function downloadDat() {
+    if (!convertedDatContent) return;
+
+    const blob = new Blob([convertedDatContent], { type: 'text/plain;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", "sub_file.dat");
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
+
+</body>
+</html>
