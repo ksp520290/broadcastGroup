@@ -1,0 +1,1246 @@
+{
+  "version": "8.0",
+  "templates": [
+    {
+      "id": 1,
+      "name": "司会",
+      "faders": "41"
+    },
+    {
+      "id": 2,
+      "name": "全照",
+      "faders": "1〜8"
+    },
+    {
+      "id": 3,
+      "name": "半照",
+      "faders": "1〜8(50%)"
+    },
+    {
+      "id": 4,
+      "name": "ストロボ",
+      "faders": "49〜52"
+    },
+    {
+      "id": 5,
+      "name": "赤",
+      "faders": "26、30、34、38"
+    },
+    {
+      "id": 6,
+      "name": "黄",
+      "faders": "25(50%)、26、29(50%)、30、33(50%)、34、37(50%)、38"
+    },
+    {
+      "id": 7,
+      "name": "青",
+      "faders": "24、28、32、36"
+    },
+    {
+      "id": 8,
+      "name": "緑",
+      "faders": "25、29、33、37"
+    },
+    {
+      "id": 9,
+      "name": "白",
+      "faders": "23、27、31、35"
+    },
+    {
+      "id": 10,
+      "name": "オレンジ",
+      "faders": "25、26、29、30、33、34、37、38"
+    },
+    {
+      "id": 11,
+      "name": "青緑",
+      "faders": "24、25、28、29、32、33、36、37"
+    },
+    {
+      "id": 12,
+      "name": "ピンク",
+      "faders": "24、26、28、30、32、34、36、38"
+    },
+    {
+      "id": 13,
+      "name": "",
+      "faders": ""
+    },
+    {
+      "id": 14,
+      "name": "",
+      "faders": ""
+    },
+    {
+      "id": 15,
+      "name": "",
+      "faders": ""
+    },
+    {
+      "id": 16,
+      "name": "",
+      "faders": ""
+    },
+    {
+      "id": 17,
+      "name": "",
+      "faders": ""
+    },
+    {
+      "id": 18,
+      "name": "",
+      "faders": ""
+    },
+    {
+      "id": 19,
+      "name": "",
+      "faders": ""
+    },
+    {
+      "id": 20,
+      "name": "",
+      "faders": ""
+    }
+  ],
+  "faderTable": [
+    {
+      "f": 1,
+      "patch": "BL上下-1",
+      "alias": "ボーダーW"
+    },
+    {
+      "f": 2,
+      "patch": "BL上下-2",
+      "alias": "ボーダーG"
+    },
+    {
+      "f": 3,
+      "patch": "BL上下-3",
+      "alias": "ボーダーB"
+    },
+    {
+      "f": 4,
+      "patch": "BL上下-4",
+      "alias": "ボーダーR"
+    },
+    {
+      "f": 5,
+      "patch": "BL中-1",
+      "alias": "ボーダーW"
+    },
+    {
+      "f": 6,
+      "patch": "BL中-2",
+      "alias": "ボーダーG"
+    },
+    {
+      "f": 7,
+      "patch": "BL中-3",
+      "alias": "ボーダーB"
+    },
+    {
+      "f": 8,
+      "patch": "BL中-4",
+      "alias": "ボーダーR"
+    },
+    {
+      "f": 9,
+      "patch": "１S-1",
+      "alias": "サス1"
+    },
+    {
+      "f": 10,
+      "patch": "１S-2",
+      "alias": "サス2"
+    },
+    {
+      "f": 11,
+      "patch": "１S-3",
+      "alias": "サス3"
+    },
+    {
+      "f": 12,
+      "patch": "１S-4",
+      "alias": "サス4"
+    },
+    {
+      "f": 13,
+      "patch": "１S-5",
+      "alias": "サス5"
+    },
+    {
+      "f": 14,
+      "patch": "１S-6",
+      "alias": "サス6"
+    },
+    {
+      "f": 15,
+      "patch": "２S-1",
+      "alias": "サス7"
+    },
+    {
+      "f": 16,
+      "patch": "２S-2",
+      "alias": "サス8"
+    },
+    {
+      "f": 17,
+      "patch": "２S-3",
+      "alias": "サス9"
+    },
+    {
+      "f": 18,
+      "patch": "２S-4",
+      "alias": "サス10"
+    },
+    {
+      "f": 19,
+      "patch": "２S-5",
+      "alias": "サス11"
+    },
+    {
+      "f": 20,
+      "patch": "２S-6",
+      "alias": "サス12"
+    },
+    {
+      "f": 21,
+      "patch": "２S-7",
+      "alias": "サス13"
+    },
+    {
+      "f": 22,
+      "patch": "２S-8",
+      "alias": "サス14"
+    },
+    {
+      "f": 23,
+      "patch": "UH上-1",
+      "alias": "URホリW"
+    },
+    {
+      "f": 24,
+      "patch": "UH上-2",
+      "alias": "URホリB"
+    },
+    {
+      "f": 25,
+      "patch": "UH上-3",
+      "alias": "URホリG"
+    },
+    {
+      "f": 26,
+      "patch": "UH上-4",
+      "alias": "URホリR"
+    },
+    {
+      "f": 27,
+      "patch": "UH下-1",
+      "alias": "ULホリW"
+    },
+    {
+      "f": 28,
+      "patch": "UH下-2",
+      "alias": "ULホリB"
+    },
+    {
+      "f": 29,
+      "patch": "UH下-3",
+      "alias": "ULホリG"
+    },
+    {
+      "f": 30,
+      "patch": "UH下-4",
+      "alias": "ULホリR"
+    },
+    {
+      "f": 31,
+      "patch": "LH上-1",
+      "alias": "LRホリW"
+    },
+    {
+      "f": 32,
+      "patch": "LH上-2",
+      "alias": "LRホリB"
+    },
+    {
+      "f": 33,
+      "patch": "LH上-3",
+      "alias": "LRホリG"
+    },
+    {
+      "f": 34,
+      "patch": "LH上-4",
+      "alias": "LRホリR"
+    },
+    {
+      "f": 35,
+      "patch": "LH下-1",
+      "alias": "LLホリW"
+    },
+    {
+      "f": 36,
+      "patch": "LH下-2",
+      "alias": "LLホリB"
+    },
+    {
+      "f": 37,
+      "patch": "LH下-3",
+      "alias": "LLホリG"
+    },
+    {
+      "f": 38,
+      "patch": "LH下-4",
+      "alias": "LLホリR"
+    },
+    {
+      "f": 39,
+      "patch": "CL-1",
+      "alias": "CL1"
+    },
+    {
+      "f": 40,
+      "patch": "CL-2",
+      "alias": "CL2(司会)"
+    },
+    {
+      "f": 41,
+      "patch": "CL-3",
+      "alias": "CL3(上手演題)"
+    },
+    {
+      "f": 42,
+      "patch": "CL-4",
+      "alias": "CL4(中央演題)"
+    },
+    {
+      "f": 43,
+      "patch": "CL-5",
+      "alias": "CL5"
+    },
+    {
+      "f": 44,
+      "patch": "CL-6",
+      "alias": "CL6(B12)"
+    },
+    {
+      "f": 45,
+      "patch": "CL-7",
+      "alias": "CL7(B34)"
+    },
+    {
+      "f": 46,
+      "patch": "CL-8",
+      "alias": "CL8(B56)"
+    },
+    {
+      "f": 47,
+      "patch": "CL-9",
+      "alias": "CL9"
+    },
+    {
+      "f": 48,
+      "patch": "CLF",
+      "alias": "CL10"
+    },
+    {
+      "f": 49,
+      "patch": "FC上下-1",
+      "alias": "ストロボ１"
+    },
+    {
+      "f": 50,
+      "patch": "FC上下-2",
+      "alias": "ストロボ２"
+    },
+    {
+      "f": 51,
+      "patch": "FC上下-3",
+      "alias": "ストロボ３"
+    },
+    {
+      "f": 52,
+      "patch": "FC上下-4",
+      "alias": "ストロボ４"
+    },
+    {
+      "f": 53,
+      "patch": "F-1",
+      "alias": "F-1"
+    },
+    {
+      "f": 54,
+      "patch": "F-2",
+      "alias": "F-2"
+    },
+    {
+      "f": 55,
+      "patch": "F-3",
+      "alias": "F-3"
+    },
+    {
+      "f": 56,
+      "patch": "客席",
+      "alias": "客席調光"
+    },
+    {
+      "f": 57,
+      "patch": "予備",
+      "alias": "予備"
+    },
+    {
+      "f": 58,
+      "patch": "予備",
+      "alias": "予備"
+    },
+    {
+      "f": 59,
+      "patch": "予備",
+      "alias": "予備"
+    },
+    {
+      "f": 60,
+      "patch": "予備",
+      "alias": "予備"
+    }
+  ],
+  "subPages": {
+    "1": [
+      {
+        "name": "司会",
+        "faders": "40",
+        "effect": ""
+      },
+      {
+        "name": "全照",
+        "faders": "1〜8",
+        "effect": ""
+      },
+      {
+        "name": "中央",
+        "faders": "42",
+        "effect": ""
+      },
+      {
+        "name": "上手",
+        "faders": "41",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      }
+    ],
+    "2": [
+      {
+        "name": "司会",
+        "faders": "40",
+        "effect": ""
+      },
+      {
+        "name": "全照",
+        "faders": "1~8",
+        "effect": ""
+      },
+      {
+        "name": "半照",
+        "faders": "1~8(50)",
+        "effect": ""
+      },
+      {
+        "name": "ストロボ",
+        "faders": "49,50,51,52",
+        "effect": ""
+      },
+      {
+        "name": "赤",
+        "faders": "26,30,34,38",
+        "effect": ""
+      },
+      {
+        "name": "黄",
+        "faders": "25,26(50),29,30(50),33,34(50),37,38(50)",
+        "effect": ""
+      },
+      {
+        "name": "青",
+        "faders": "24,28,32,36",
+        "effect": ""
+      },
+      {
+        "name": "緑",
+        "faders": "25,29,33,37",
+        "effect": ""
+      },
+      {
+        "name": "白",
+        "faders": "23,27,31,35",
+        "effect": ""
+      },
+      {
+        "name": "オレンジ",
+        "faders": "25(80),26,29(80),30,33(80),34,37(80),38",
+        "effect": ""
+      },
+      {
+        "name": "青緑",
+        "faders": "24,25,28,29,32,33,36,37",
+        "effect": ""
+      },
+      {
+        "name": "ピンク",
+        "faders": "24,26,28,30,32,34,36,38",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      }
+    ],
+    "3": [
+      {
+        "name": "司会",
+        "faders": "40",
+        "effect": ""
+      },
+      {
+        "name": "全照",
+        "faders": "1~8",
+        "effect": ""
+      },
+      {
+        "name": "中央",
+        "faders": "42",
+        "effect": ""
+      },
+      {
+        "name": "上手",
+        "faders": "41",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      }
+    ],
+    "4": [
+      {
+        "name": "サス1-1",
+        "faders": "9",
+        "effect": ""
+      },
+      {
+        "name": "サス1-2",
+        "faders": "10",
+        "effect": ""
+      },
+      {
+        "name": "サス1-3",
+        "faders": "11",
+        "effect": ""
+      },
+      {
+        "name": "サス1-4",
+        "faders": "12",
+        "effect": ""
+      },
+      {
+        "name": "サス1-5",
+        "faders": "13",
+        "effect": ""
+      },
+      {
+        "name": "サス1-6",
+        "faders": "14",
+        "effect": ""
+      },
+      {
+        "name": "サス2-1",
+        "faders": "15",
+        "effect": ""
+      },
+      {
+        "name": "サス2-2",
+        "faders": "16",
+        "effect": ""
+      },
+      {
+        "name": "サス2-3",
+        "faders": "17",
+        "effect": ""
+      },
+      {
+        "name": "サス2-4",
+        "faders": "18",
+        "effect": ""
+      },
+      {
+        "name": "サス2-5",
+        "faders": "19",
+        "effect": ""
+      },
+      {
+        "name": "サス2-6",
+        "faders": "20",
+        "effect": ""
+      },
+      {
+        "name": "サス2-7",
+        "faders": "21",
+        "effect": ""
+      },
+      {
+        "name": "サス2-8",
+        "faders": "22",
+        "effect": ""
+      },
+      {
+        "name": "CL1(a12)",
+        "faders": "40",
+        "effect": ""
+      },
+      {
+        "name": "CL2(a34)",
+        "faders": "41",
+        "effect": ""
+      },
+      {
+        "name": "CL3(a56)",
+        "faders": "42",
+        "effect": ""
+      },
+      {
+        "name": "CL4(b12)",
+        "faders": "44",
+        "effect": ""
+      },
+      {
+        "name": "CL5(b34)",
+        "faders": "45",
+        "effect": ""
+      },
+      {
+        "name": "CL6(b56)",
+        "faders": "46",
+        "effect": ""
+      }
+    ],
+    "5": [
+      {
+        "name": "ローホリ(w)",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "ローホリ(b)",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "ローホリ(g)",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "ローホリ(r)",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "ストロボ(49)",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "ストロボ(50)",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "ストロボ(51)",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "ストロボ(52)",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": "1"
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": "3"
+      }
+    ],
+    "6": [
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      },
+      {
+        "name": "",
+        "faders": "",
+        "effect": ""
+      }
+    ]
+  },
+  "subNo": 2,
+  "subTitles": {
+    "2": "テンプレ",
+    "5": "下手、確認用"
+  },
+  "effectData": {
+    "1": {
+      "name": "",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "49、50"
+        },
+        {
+          "sec": 0.1,
+          "faders": "49、51、52"
+        },
+        {
+          "sec": 0.1,
+          "faders": "50、51、52"
+        }
+      ]
+    },
+    "2": {
+      "name": "",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": ""
+        },
+        {
+          "sec": 0.1,
+          "faders": "49、51、52"
+        }
+      ]
+    },
+    "3": {
+      "name": "",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "26,30,34,38"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25,26(50),29,30(50),33,34(50),37,38(50)"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,28,32,36"
+        }
+      ]
+    },
+    "5": {
+      "name": "",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "30,34,38"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,32,36"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,28,32"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,28,36"
+        }
+      ]
+    },
+    "6": {
+      "name": "",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "29,30(50),33,34(50),37,38(50)"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25,26(50),33,34(50),37,38(50)"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25,26(50),29,30(50),33,34(50)"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25,26(50),29,30(50),37,38(50)"
+        }
+      ]
+    },
+    "7": {
+      "name": "青",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "28,32,36"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,32,36"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,28,32"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,28,36"
+        }
+      ]
+    },
+    "8": {
+      "name": "緑",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "29,33,37"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25,33,37"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25,29,33"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25,29,37"
+        }
+      ]
+    },
+    "9": {
+      "name": "",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "27,31,35"
+        },
+        {
+          "sec": 0.1,
+          "faders": "23,31,35"
+        },
+        {
+          "sec": 0.1,
+          "faders": "23,27,31"
+        },
+        {
+          "sec": 0.1,
+          "faders": "23,27,35"
+        }
+      ]
+    },
+    "10": {
+      "name": "",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "29(80),30,33(80),34,37(80),38"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25(80),26,33(80),34,37(80),38"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25(80),26,29(80),30,33(80),34"
+        },
+        {
+          "sec": 0.1,
+          "faders": "25(80),26,29(80),30,37(80),38"
+        }
+      ]
+    },
+    "11": {
+      "name": "",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "28,29,32,33,36,37"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,25,32,33,36,37"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,25,28,29,32,33"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,25,28,29,36,37"
+        }
+      ]
+    },
+    "12": {
+      "name": "",
+      "steps": [
+        {
+          "sec": 0.1,
+          "faders": "28,30,32,34,36,38"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,26,32,34,36,38"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,26,28,30,32,34"
+        },
+        {
+          "sec": 0.1,
+          "faders": "24,26,28,30,36,38"
+        }
+      ]
+    }
+  },
+  "effectNo": 12,
+  "customEffects": [],
+  "fadeDurationSec": 1
+}
