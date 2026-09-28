@@ -264,11 +264,11 @@ body.locked .game-cue-panel .cue-table td{overflow:hidden;text-overflow:ellipsis
 body.locked .cue-table th:nth-child(n+5),
 body.locked .cue-table td:nth-child(n+5){display:none;}
 /* 追加要望④：本番モードで残る4列の幅比率を、練習モード時にこの4列が占めていた比率へ揃える
-   （練習モードの列幅 4.35% / 4.35% / 4.35% / 14.43% の合計27.48%を20%に比例配分） */
-body.locked .cue-main-table th:nth-child(1),body.locked .cue-main-table td:nth-child(1){width:3%;}
-body.locked .cue-main-table th:nth-child(2),body.locked .cue-main-table td:nth-child(2){width:5%;}
-body.locked .cue-main-table th:nth-child(3),body.locked .cue-main-table td:nth-child(3){width:3%;}
-body.locked .cue-main-table th:nth-child(4),body.locked .cue-main-table td:nth-child(4){width:9%;}
+   （練習モードの列幅 4.35% / 4.35% / 4.35% / 14.43% の合計27.48%を100%に比例配分） */
+body.locked .cue-main-table th:nth-child(1),body.locked .cue-main-table td:nth-child(1){width:17.5%;}
+body.locked .cue-main-table th:nth-child(2),body.locked .cue-main-table td:nth-child(2){width:17.5%;}
+body.locked .cue-main-table th:nth-child(3),body.locked .cue-main-table td:nth-child(3){width:17.5%;}
+body.locked .cue-main-table th:nth-child(4),body.locked .cue-main-table td:nth-child(4){width:47.5%;}
 body.locked .cue-mirror-title{margin-top:0;}
 
 /* ---------- ゲームモード用の大型入力ボタン（要件②→追加要望①：縦画面のみ表示） ---------- */
