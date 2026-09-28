@@ -257,7 +257,7 @@ body.dark-mode .script-editor *{color:inherit;}
 body.locked .game-mode-flex{display:flex;gap:8px;align-items:flex-start;}
 body.locked .game-mode-flex .game-primary{flex:0 0 70%;max-width:70%;min-width:0;}
 body.locked .game-mode-flex .game-cue-panel{flex:0 0 29%;max-width:29%;min-width:0;overflow-x:hidden;}
-.game-cue-panel .cue-table{table-layout:fixed;width:20%;}
+.game-cue-panel .cue-table{table-layout:fixed;width:100%;}
 body.locked .game-cue-panel .cue-table th,
 body.locked .game-cue-panel .cue-table td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 2px;font-size:10px;}
 /* Fader,秒数,音源,セリフ の4列のみ表示し、それ以外（舞台以降・反映・削除）は本番モードで非表示にする */
