@@ -257,18 +257,18 @@ body.dark-mode .script-editor *{color:inherit;}
 body.locked .game-mode-flex{display:flex;gap:8px;align-items:flex-start;}
 body.locked .game-mode-flex .game-primary{flex:0 0 70%;max-width:70%;min-width:0;}
 body.locked .game-mode-flex .game-cue-panel{flex:0 0 29%;max-width:29%;min-width:0;overflow-x:hidden;}
-.game-cue-panel .cue-table{table-layout:fixed;width:100%;}
+.game-cue-panel .cue-table{table-layout:fixed;width:20%;}
 body.locked .game-cue-panel .cue-table th,
 body.locked .game-cue-panel .cue-table td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 2px;font-size:10px;}
 /* Fader,秒数,音源,セリフ の4列のみ表示し、それ以外（舞台以降・反映・削除）は本番モードで非表示にする */
 body.locked .cue-table th:nth-child(n+5),
 body.locked .cue-table td:nth-child(n+5){display:none;}
 /* 追加要望④：本番モードで残る4列の幅比率を、練習モード時にこの4列が占めていた比率へ揃える
-   （練習モードの列幅 4.35% / 4.35% / 4.35% / 14.43% の合計27.48%を100%に比例配分） */
-body.locked .cue-main-table th:nth-child(1),body.locked .cue-main-table td:nth-child(1){width:15.83%;}
-body.locked .cue-main-table th:nth-child(2),body.locked .cue-main-table td:nth-child(2){width:15.83%;}
-body.locked .cue-main-table th:nth-child(3),body.locked .cue-main-table td:nth-child(3){width:15.83%;}
-body.locked .cue-main-table th:nth-child(4),body.locked .cue-main-table td:nth-child(4){width:52.51%;}
+   （練習モードの列幅 4.35% / 4.35% / 4.35% / 14.43% の合計27.48%を20%に比例配分） */
+body.locked .cue-main-table th:nth-child(1),body.locked .cue-main-table td:nth-child(1){width:3%;}
+body.locked .cue-main-table th:nth-child(2),body.locked .cue-main-table td:nth-child(2){width:5%;}
+body.locked .cue-main-table th:nth-child(3),body.locked .cue-main-table td:nth-child(3){width:3%;}
+body.locked .cue-main-table th:nth-child(4),body.locked .cue-main-table td:nth-child(4){width:9%;}
 body.locked .cue-mirror-title{margin-top:0;}
 
 /* ---------- ゲームモード用の大型入力ボタン（要件②→追加要望①：縦画面のみ表示） ---------- */
