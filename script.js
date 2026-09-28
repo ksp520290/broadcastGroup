@@ -377,12 +377,20 @@ $('#googleLogoutBtn').addEventListener('click', ()=>{
 /* ============================================================
    ログイン / 設定 / 管理者画面 / フェード秒数
    ============================================================ */
+// ログイン後チュートリアル（班員の方へ）中は設定メニューを表示したままにする。
+// 「⚙ 設定」ボタンが再度押されるまで（またはチュートリアル終了・ログアウトまで）閉じない。
+let tutorialSettingsPinned = false;
+function hideSettingsMenu(force){
+  if(tutorialSettingsPinned && !force) return;
+  $('#settingsMenu').classList.add('hidden');
+}
 function updateLoginUI(){
   $('#loginBtn').classList.toggle('hidden', state.loggedIn);
   $('#settingsMenuBtn').classList.toggle('hidden', !state.loggedIn);
   // Ver.8.1 §7-1：ストップウォッチ関連はログイン時のみ表示する
   $('.header-center').classList.toggle('hidden', !state.loggedIn);
   if(!state.loggedIn){
+    tutorialSettingsPinned = false;
     $('#settingsMenu').classList.add('hidden');
     $('#otherModal').classList.add('hidden');   // 「その他」はログイン必須
     // ログアウト時：実行中なら停止するが、経過時間は保持する
@@ -421,6 +429,7 @@ $('#loginSubmitBtn').addEventListener('click', ()=>{
 });
 $('#settingsMenuBtn').addEventListener('click', ()=>{
   $('#settingsMenu').classList.toggle('hidden');
+  tutorialSettingsPinned = false; // 設定ボタンが押されたら、チュートリアル中の表示固定を解除する
 });
 $('#logoutBtn').addEventListener('click', ()=>{
   state.loggedIn = false;
@@ -635,7 +644,7 @@ $('#fadeSecSaveBtn').addEventListener('click', ()=>{
 document.addEventListener('click', e=>{
   const area = $('.login-area');
   if(area && !area.contains(e.target)){
-    $('#settingsMenu').classList.add('hidden');
+    hideSettingsMenu();
   }
 });
 
@@ -718,8 +727,8 @@ function buildMemberTutorialSteps(){
   steps.push({title:'Welcome', body:'ログインしたということは、、、放送班員ですね！一緒にこのウェブサイトの”班員”の使い方を学んでいきましょう！また、この説明は”班員の方へ”からいつでも閲覧可能なのでわからなくなった場合はぜひ活用してくださいね！', target:null});
   steps.push({title:'データを保存', body:'「データを保存」を押すと、現在のCue内容がデータ管理＞Subへ自動的に書き込まれます（ID1・ID2は司会用の固定枠で、ID3以降にCueが順番に入ります）。', target:'#saveDataBtn'});
   steps.push({title:'調光卓出力', body:'「調光卓出力」を押すと、調光卓に読み込ませるためのファイル（sub.dat／effect.dat）を出力できます。', target:'#consoleExportBtn'});
-  steps.push({title:'練習モードボタン', body:'このボタンで「練習モード」と「本番モード」を切り替えます。ログインしていないと本番モードには切り替えられません。', target:'#lockModeToggle'});
-  steps.push({title:'本番モードの説明１', body:'本番モードに切り替える際は「音源タイミング設定」「照明タイミングのみ」「両方を練習」の3つから練習方法を選べます。まずは焦らず、自分に合った方法を選んで練習してみましょう。', target:'#lockModeToggle'});
+  steps.push({title:'練習モードボタン', body:'このボタンで「練習モード」と「本番モード」を切り替えます。ログインしていないと本番モードには切り替えられません。実際に「練習モード」ボタンを押して、本番モードに切り替えてみましょう。', target:'#lockModeToggle'});
+  steps.push({title:'本番モードの説明１', body:'本番モードに切り替える際は「音源タイミング設定」「照明タイミングのみ」「両方を練習」の3つから練習方法を選べます。まずは焦らず、自分に合った方法を選んで練習してみましょう。それでは、もう一度ボタンを押して練習モードに戻してみましょう。', target:'#lockModeToggle'});
   steps.push({title:'本番モードの説明２', body:'本番モード中は数字キー（1〜0）を押すと、Fader列の数字と一致するCueが順番にステージへ反映されます。反映されたCueはCue一覧上で色が変わります。', target:'.game-cue-panel .cue-table'});
   steps.push({title:'本番モードの説明３', body:'「照明タイミングのみ」「両方を練習」を選んだ場合、全てのCueを消化するか本番モードを終了すると、リザルト画面が表示されます。ここでCueごとの規定タイミングとの誤差が確認でき、誤差0.3秒以内なら合格です。', target:'#resultModal'});
   steps.push({title:'完了', body:'お疲れさまでした！基本は以上です。これで講堂での舞台演出に関しては心配いりません！本番モードでの特訓も忘れずに！※もしもっと知りたい方は”その他”をタップしてください！情報の濁流と先輩方が触れてきた(変人の)世界の一部を体感できますよ！※この説明は”班員の方へ”からいつでも閲覧可能なのでわからなくなった場合はぜひ活用してくださいね！', target:'#openOtherBtn'});
@@ -829,12 +838,16 @@ function startTutorial(kind){
   const skipRow = $('#tutorialSkipCheckbox').closest('label');
   if(skipRow) skipRow.classList.toggle('hidden', tutorialKind==='other');
   $('#tutorialSkipCheckbox').checked = false;
+  // 「班員の方へ」チュートリアルは、説明画面の表示と同時に設定メニューを開き、設定ボタンが再度押されるまで表示し続ける
+  tutorialSettingsPinned = (tutorialKind==='member');
+  if(tutorialSettingsPinned && state.loggedIn) $('#settingsMenu').classList.remove('hidden');
   renderTutorialStep();
   $('#tutorialModal').classList.remove('hidden');
   document.body.classList.add('tutorial-active');
 }
 function closeTutorial(finished){
   const kind = tutorialKind;
+  tutorialSettingsPinned = false;
   $('#tutorialModal').classList.add('hidden');
   $('#tutorialHighlight').classList.add('hidden');
   document.body.classList.remove('tutorial-active');
@@ -853,6 +866,14 @@ function closeTutorial(finished){
   if(kind==='other'){
     openOtherModal();
   }
+}
+// 「班員の方へ」チュートリアル：モード切替に応じて自動で次の説明へ進める
+//  4/8（index 3）：練習モード→本番モードに切り替わったら 5/8 へ
+//  5/8（index 4）：本番モード→練習モードに切り替わったら 6/8 へ
+function tutorialAdvanceOnModeChange(toLocked){
+  if(!document.body.classList.contains('tutorial-active') || tutorialKind!=='member') return;
+  if(toLocked && tutorialStepIndex===3){ tutorialStepIndex = 4; renderTutorialStep(); }
+  else if(!toLocked && tutorialStepIndex===4){ tutorialStepIndex = 5; renderTutorialStep(); }
 }
 $('#tutorialBtn').addEventListener('click', ()=> startTutorial('general'));
 // 追加要望①-A：設定メニュー内「班員の方へ」ボタンから、スキップ設定に関わらずいつでも手動起動できる
@@ -995,6 +1016,7 @@ function enterLockedModeWithGameMode(mode){
   $('#gameModeChoiceModal').classList.add('hidden');
   applyAllSettingsToUI();
   saveState();
+  tutorialAdvanceOnModeChange(true);
 }
 $('#gameModeChoice_audioTiming').addEventListener('click', ()=> enterLockedModeWithGameMode('audioTiming'));
 $('#gameModeChoice_lightingOnly').addEventListener('click', ()=> enterLockedModeWithGameMode('lightingOnly'));
@@ -1008,7 +1030,7 @@ $('#lockModeToggle').addEventListener('click', ()=>{
   }
   if(!state.locked){
     // 追加要望⑫：練習モード→本番モードへ切り替える瞬間に3択モーダルを表示する
-    $('#settingsMenu').classList.add('hidden');
+    hideSettingsMenu();
     $('#gameModeChoiceModal').classList.remove('hidden');
     return;
   }
@@ -1018,6 +1040,7 @@ $('#lockModeToggle').addEventListener('click', ()=>{
   state.gameMode = null;
   applyAllSettingsToUI();
   saveState();
+  tutorialAdvanceOnModeChange(false);
 });
 
 /* ============================================================
@@ -1100,6 +1123,21 @@ function renderVersionMemos(){
       }
     });
     li.appendChild(titleBtn);
+    // 履歴の削除ボタン
+    const delBtn = document.createElement('button');
+    delBtn.className = 'memo-del-btn';
+    delBtn.textContent = '✕';
+    delBtn.title = 'この履歴を削除';
+    delBtn.addEventListener('click', ev=>{
+      ev.stopPropagation();
+      if(confirm(`「${m.text}」（${m.date}）を履歴から削除しますか？この操作は元に戻せません。`)){
+        const i = state.versionMemos.indexOf(m);
+        if(i>=0) state.versionMemos.splice(i,1);
+        renderVersionMemos();
+        saveState();
+      }
+    });
+    li.appendChild(delBtn);
     list.appendChild(li);
   });
   $('#versionMemoDisplay').textContent = state.versionMemos[0] ? state.versionMemos[0].text : '';
@@ -3125,7 +3163,7 @@ $('#exportCsvBtn').addEventListener('click', ()=>{
   const method = $('#csvMethodSelect').value;
   if(method==='template') exportTemplateCsv();
   else exportSheetCsv();
-  $('#settingsMenu').classList.add('hidden');
+  hideSettingsMenu();
 });
 
 /* ============================================================
@@ -3176,6 +3214,8 @@ async function exportStateAsZip(){
   }
   cloned.adminAssets = {};
   cloned._adminAssetPaths = adminPaths;
+  // 履歴一覧（バージョン管理メモ）はZIPに保存しない
+  delete cloned.versionMemos;
 
   for(const item of (cloned.stageItems||[])){
     item.src = await externalizeToZip(zip, counterRef, item.src, 'png');
@@ -3215,6 +3255,8 @@ async function importStateFromZip(file){
   const dataFile = zip.file('data.json');
   if(!dataFile){ alert('ZIP内にdata.jsonが見つかりません。'); return; }
   const json = JSON.parse(await dataFile.async('string'));
+  // 履歴一覧はZIPの内容で上書きしない（旧ZIPに含まれていても無視し、現在の履歴を保持する）
+  delete json.versionMemos;
 
   for(const item of (json.stageItems||[])) item.src = await resolveZipAsset(zip, item.src);
   for(const cue of (json.cues||[])){
@@ -3873,14 +3915,14 @@ function switchOtherTab(tab){
 }
 function openOtherModal(tab){
   if(!state.loggedIn){ alert('ログインしてください。'); return; }
-  $('#settingsMenu').classList.add('hidden');
+  hideSettingsMenu();
   $('#otherModal').classList.remove('hidden');
   switchOtherTab(tab || currentOtherTab || 'admin');
 }
 function closeOtherModal(){ $('#otherModal').classList.add('hidden'); }
 $('#openOtherBtn').addEventListener('click', ()=>{
   // 追加要望①-B：「その他」を押すたびに専用チュートリアルを表示し、閉じた後に本来の「その他」画面を開く
-  $('#settingsMenu').classList.add('hidden');
+  hideSettingsMenu(true);
   startTutorial('other');
 });
 $('#otherCloseBtn').addEventListener('click', closeOtherModal);
@@ -4174,7 +4216,7 @@ function bulkSyncCfxToEffect(){
   refreshEffectTabIfVisible();
 }
 $('#saveDataBtn').addEventListener('click', ()=>{
-  $('#settingsMenu').classList.add('hidden');
+  hideSettingsMenu();
   bulkSyncCuesToSub();
   bulkSyncCfxToEffect();
   saveState();
@@ -4281,7 +4323,7 @@ function downloadConsoleDatFile(fileName, headerB64, bodyText){
   setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
 }
 $('#consoleExportBtn').addEventListener('click', ()=>{
-  $('#settingsMenu').classList.add('hidden');
+  hideSettingsMenu();
   downloadConsoleDatFile('sub.dat', CONSOLE_DAT_HEADER_SUB_B64, buildSubDatText());
   downloadConsoleDatFile('effect.dat', CONSOLE_DAT_HEADER_EFFECT_B64, buildEffectDatText());
 });

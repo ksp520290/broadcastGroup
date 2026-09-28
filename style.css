@@ -91,6 +91,8 @@ body.cast-open #versionMemoBar{margin-left:var(--cast-w-open);width:calc(100% - 
 #versionMemoList li{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 6px;display:flex;align-items:center;gap:6px;}
 #versionMemoList .memo-title-btn{background:none;border:none;color:inherit;font-size:12px;cursor:pointer;text-decoration:underline;padding:0;}
 #versionMemoList .memo-title-btn:hover{color:var(--accent);}
+#versionMemoList .memo-del-btn{background:none;border:none;color:#e63946;font-size:12px;cursor:pointer;padding:0 2px;line-height:1;}
+#versionMemoList .memo-del-btn:hover{background:#e63946;color:#fff;border-radius:3px;}
 
 /* ---------- レイアウト ---------- */
 #mainLayout{display:flex;flex-direction:column;height:calc(100vh - var(--header-h) - 40px);margin-left:var(--cast-w-closed);transition:margin-left .2s;}
@@ -263,12 +265,17 @@ body.locked .game-cue-panel .cue-table td{overflow:hidden;text-overflow:ellipsis
 /* Fader,秒数,音源,セリフ の4列のみ表示し、それ以外（舞台以降・反映・削除）は本番モードで非表示にする */
 body.locked .cue-table th:nth-child(n+5),
 body.locked .cue-table td:nth-child(n+5){display:none;}
-/* 追加要望④：本番モードで残る4列の幅比率を、練習モード時にこの4列が占めていた比率へ揃える
-   （練習モードの列幅 4.35% / 4.35% / 4.35% / 14.43% の合計27.48%を100%に比例配分） */
-body.locked .cue-main-table th:nth-child(1),body.locked .cue-main-table td:nth-child(1){width:17.5%;}
-body.locked .cue-main-table th:nth-child(2),body.locked .cue-main-table td:nth-child(2){width:17.5%;}
-body.locked .cue-main-table th:nth-child(3),body.locked .cue-main-table td:nth-child(3){width:17.5%;}
-body.locked .cue-main-table th:nth-child(4),body.locked .cue-main-table td:nth-child(4){width:47.5%;}
+/* 本番モードのCue一覧：練習モードの列サイズに対し、Fader・秒数・音源は1/5、セリフは1/3
+   （練習モード列幅：4.35% / 4.35% / 4.35% / 14.43%（練習側テーブル幅基準）。
+     本番側は 29% 幅のパネル内なので、パネル基準に換算：
+     4.35%÷5÷0.29≒3.00% ／ 14.43%÷3÷0.29≒16.59%。表全体は 3.00×3+16.59≒25.59%） */
+body.locked .game-cue-panel .cue-main-table{width:100%;min-width:0;}
+body.locked .cue-main-table th:nth-child(1),body.locked .cue-main-table td:nth-child(1),
+body.locked .cue-main-table th:nth-child(2),body.locked .cue-main-table td:nth-child(2),
+body.locked .cue-main-table th:nth-child(3),body.locked .cue-main-table td:nth-child(3){width:11.72%;}
+body.locked .cue-main-table th:nth-child(4),body.locked .cue-main-table td:nth-child(4){width:64.83%;}
+body.locked .game-cue-panel .cue-table th,
+body.locked .game-cue-panel .cue-table td{padding:1px 0;font-size:12px;}
 body.locked .cue-mirror-title{margin-top:0;}
 
 /* ---------- ゲームモード用の大型入力ボタン（要件②→追加要望①：縦画面のみ表示） ---------- */
